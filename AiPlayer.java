@@ -3,22 +3,20 @@ import java.util.*;
 /**
  * This is the AiPlayer class.  It simulates a minimax player for the max
  * connect four game.
- * The constructor essentially does nothing. 
- * 
+ * The constructor essentially does nothing.
+ *
  * @author james spargo
  *
  */
 
-public class AiPlayer 
-{
+public class AiPlayer {
     /**
      * The constructor essentially does nothing except instantiate an
      * AiPlayer object.
      *
      */
-    public AiPlayer() 
-    {
-	// nothing to do here
+    public AiPlayer() {
+        // nothing to do here
     }
 
     /**
@@ -28,19 +26,18 @@ public class AiPlayer
      * @return an integer indicating which column the AiPlayer would like
      * to play in.
      */
-    public int findBestPlay( GameBoard currentGame ) 
-    {
-	// start random play code
-	Random randy = new Random();
-	int playChoice = 99;
-	
-	playChoice = randy.nextInt( 7 );
-	
-	while( !currentGame.isValidPlay( playChoice ) )
-	    playChoice = randy.nextInt( 7 );
-	
-	// end random play code
-	
-	return playChoice;
+    public int findBestPlay( GameBoard currentGame ) {
+        // start random play code
+        Random randy = new Random();
+        int playChoice = 99;
+
+        playChoice = randy.nextInt( 7 );
+
+        while ( !currentGame.isValidPlay( playChoice ) )
+            playChoice = randy.nextInt( 7 );
+
+        // end random play code
+
+        return playChoice;
     }
 }
