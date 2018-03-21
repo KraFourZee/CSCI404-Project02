@@ -89,7 +89,12 @@ public class maxconnect4 {
     if ( currentGame.getPieceCount() < 42 ) {
       int current_player = currentGame.getCurrentTurn();
       // AI play - thoughtful play
-      currentGame = minimax(currentGame, 1, Integer.MIN_VALUE, Integer.MAX_VALUE, depthLevel);
+      if (current_player == 1) {
+        currentGame = minimax(currentGame, current_player, Integer.MIN_VALUE, Integer.MAX_VALUE, depthLevel);
+      } else {
+        currentGame = minimaxrev(currentGame, current_player, Integer.MIN_VALUE, Integer.MAX_VALUE, depthLevel);
+      }
+
 
       // display the current game board
       System.out.println("move " + currentGame.getPieceCount()
@@ -208,6 +213,37 @@ public class maxconnect4 {
         currentGameBoard = minimax(new GameBoard(gb.getGameBoard()), 1, alpha, beta, depth - 1);
         if (currentGameBoard.getScore(2) < beta) {
           beta = currentGameBoard.getScore(2);
+          finalGameBoard = new GameBoard(gb.getGameBoard());
+        }
+        if (alpha >= beta) break;
+      }
+      gb.removePiece(i);
+    }
+    return finalGameBoard;
+  }
+
+  public static GameBoard minimaxrev(GameBoard gb, int turn, int alpha, int beta, int depth) {
+    GameBoard finalGameBoard = new GameBoard(gb.getGameBoard());
+    if (depth == 0) {
+      return finalGameBoard;
+    }
+    for (int i = 0; i < 7; i++) {
+      if (!gb.isValidPlay(i)) continue;
+      GameBoard currentGameBoard = new GameBoard(gb.getGameBoard());
+      gb.playPiece(i);
+      if (turn == 2) {
+        //computer or max
+        currentGameBoard = minimax(new GameBoard(gb.getGameBoard()), 1, alpha, beta, depth - 1);
+        if (currentGameBoard.getScore(2) > alpha) {
+          alpha = currentGameBoard.getScore(2);
+          finalGameBoard = new GameBoard(gb.getGameBoard()); // be careful
+        }
+        if (alpha >= beta) break;
+      } else {
+        //human or min
+        currentGameBoard = minimax(new GameBoard(gb.getGameBoard()), 2, alpha, beta, depth - 1);
+        if (currentGameBoard.getScore(1) < beta) {
+          beta = currentGameBoard.getScore(1);
           finalGameBoard = new GameBoard(gb.getGameBoard());
         }
         if (alpha >= beta) break;
