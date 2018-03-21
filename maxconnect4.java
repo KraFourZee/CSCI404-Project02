@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.Scanner;
 
 /**
  *
@@ -61,7 +62,8 @@ public class maxconnect4 {
 
     if ( game_mode.equalsIgnoreCase( "interactive" ) ) {
       //System.out.println("interactive mode is currently not implemented\n");
-      playInteractiveGame(currentGame, depthLevel, game_mode);
+      String whoNext = args[2].toString();
+      playInteractiveGame(currentGame, depthLevel, whoNext);
 
       return;
     } else if ( !game_mode.equalsIgnoreCase( "one-move" ) ) {
@@ -115,40 +117,57 @@ public class maxconnect4 {
   } // end of main()
 
   private static void playInteractiveGame(GameBoard currentGame, int depthLevel, String game_mode) {
-    //currentGame = minimax(currentGame, currentGame.getCurrentTurn(), Integer.MIN_VALUE, Integer.MAX_VALUE, depthLevel);
-    //currentGame.printGameBoard();
-    // int current_player = currentGame.getCurrentTurn();
-    // for (currentGame.getPieceCount() < 42) {
-    //   // display the current game board
-    //   System.out.println("move " + currentGame.getPieceCount()
-    //                      + ": Player " + current_player);
-    //   //+ ", column " + playColumn);
-    //   System.out.print("game state after move:\n");
-    //   currentGame.printGameBoard();
+    // currentGame = minimax(currentGame, currentGame.getCurrentTurn(), Integer.MIN_VALUE, Integer.MAX_VALUE, depthLevel);
+    // currentGame.printGameBoard();
 
-    //   // print the current scores
-    //   System.out.println( "Score: Player 1 = " + currentGame.getScore( 1 ) +
-    //                       ", Player2 = " + currentGame.getScore( 2 ) + "\n " );
-    //   if (game_mode.equalsIgnoreCase("computer-next")) {
-    //     currentGame = minimax(currentGame, current_player, Integer.MIN_VALUE, Integer.MAX_VALUE, depthLevel);
-    //     currentGame.printGameBoardToFile( "computer.txt" );
-    //     game_mode = "human-next";
-    //   } else {
+    while (currentGame.getPieceCount() < 42) {
+      int current_player = currentGame.getCurrentTurn();
+      // display the current game board
+      System.out.println("move " + currentGame.getPieceCount()
+                         + ": Player " + current_player);
+      //+ ", column " + playColumn);
+      System.out.print("game state after move:\n");
+      currentGame.printGameBoard();
+
+      // print the current scores
+      System.out.println( "Score: Player 1 = " + currentGame.getScore( 1 ) +
+                          ", Player2 = " + currentGame.getScore( 2 ) + "\n " );
+      if (game_mode.equalsIgnoreCase("computer-next")) {
+        currentGame = minimax(currentGame, current_player, Integer.MIN_VALUE, Integer.MAX_VALUE, depthLevel);
+        currentGame.printGameBoardToFile( "computer.txt" );
+        game_mode = "human-next";
+        currentGame = new GameBoard("computer.txt");
+      } else {
         //human shit
         //currentGame = minimax(currentGame, current_player, Integer.MIN_VALUE, Integer.MAX_VALUE, depthLevel);
-        // System.out.println("Your move (1-7): ");
-        // int move = scan.nextInt();
-        // while (move < 1 || move > 7 || !currentGame.isValidPlay(move - 1)) {
-        //   System.out.println("Invalid move.\n\nYour move (1-7): ");
-        //   move = scan.nextInt();
-        // }
+        Scanner scan = new Scanner(System.in);
+        System.out.println("Your move (1-7): ");
+        int move = scan.nextInt();
+        while (move < 1 || move > 7 || !currentGame.isValidPlay(move - 1)) {
+          System.out.println("Invalid move.\n\nYour move (1-7): ");
+          move = scan.nextInt();
+        }
 
-        // //Assume 2 is the opponent
-        // currentGame.playPiece(move - 1, (byte)2);
-        // currentGame.printGameBoardToFile( "human.txt" );
-        // game_mode = "computer-next";
+        //Assume 2 is the opponent
+        currentGame.playPiece(move - 1);
+        currentGame.printGameBoardToFile( "human.txt" );
+        game_mode = "computer-next";
+        currentGame = new GameBoard("human.txt");
       }
     }
+
+    int current_player = currentGame.getCurrentTurn();
+    // display the current game board
+    System.out.println("move " + currentGame.getPieceCount()
+                       + ": Player " + current_player);
+    //+ ", column " + playColumn);
+    System.out.print("game state after move:\n");
+    currentGame.printGameBoard();
+
+    // print the current scores
+    System.out.println( "Score: Player 1 = " + currentGame.getScore( 1 ) +
+                        ", Player2 = " + currentGame.getScore( 2 ) + "\n " );
+
     /*
     function alphabeta(node, depth, α, β, maximizingPlayer)
     02      if depth = 0 or node is a terminal node
@@ -210,89 +229,6 @@ public class maxconnect4 {
     }
     return finalGameBoard;
   }
-
-  // public GameBoard minimax(int depth, int turn, int alpha, int beta, int maxDepth) {
-  //   if (depth == maxDepth) {
-  //     return currScore;
-  //   }
-  //   int maxScore = Integer.MIN_VALUE, minScore = Integer.MAX_VALUE;
-  //   for (int j = 0; j <= 6; ++j) {
-
-  //     int currentScore = 0;
-
-  //     if (!b.isLegalMove(j)) continue;
-
-  //     if (turn == 1) {
-  //       b.placeMove(j, 1);
-  //       currentScore = minimax(depth + 1, 2, alpha, beta);
-
-  //       if (depth == 0) {
-  //         System.out.println("Score for location " + j + " = " + currentScore);
-  //         if (currentScore > maxScore)nextMoveLocation = j;
-  //         if (currentScore == Integer.MAX_VALUE / 2) {b.undoMove(j); break;}
-  //       }
-
-  //       maxScore = Math.max(currentScore, maxScore);
-
-  //       alpha = Math.max(currentScore, alpha);
-  //     } else if (turn == 2) {
-  //       b.placeMove(j, 2);
-  //       currentScore = minimax(depth + 1, 1, alpha, beta);
-  //       minScore = Math.min(currentScore, minScore);
-
-  //       beta = Math.min(currentScore, beta);
-  //     }
-  //     b.undoMove(j);
-  //     if (currentScore == Integer.MAX_VALUE || currentScore == Integer.MIN_VALUE) break;
-  //   }
-  // }
-
-  // public int minimax(int depth, int turn, int alpha, int beta) {
-
-  //   if (beta <= alpha) {if (turn == 1) return Integer.MAX_VALUE; else return Integer.MIN_VALUE; }
-  //   int gameResult = gameResult(b);
-
-  //   if (gameResult == 1)return Integer.MAX_VALUE / 2;
-  //   else if (gameResult == 2)return Integer.MIN_VALUE / 2;
-  //   else if (gameResult == 0)return 0;
-
-  //   if (depth == maxDepth)return evaluateBoard(b);
-
-  //   int maxScore = Integer.MIN_VALUE, minScore = Integer.MAX_VALUE;
-
-  //   for (int j = 0; j <= 6; ++j) {
-
-  //     int currentScore = 0;
-
-  //     if (!b.isLegalMove(j)) continue;
-
-  //     if (turn == 1) {
-  //       b.placeMove(j, 1);
-  //       currentScore = minimax(depth + 1, 2, alpha, beta);
-
-  //       if (depth == 0) {
-  //         System.out.println("Score for location " + j + " = " + currentScore);
-  //         if (currentScore > maxScore)nextMoveLocation = j;
-  //         if (currentScore == Integer.MAX_VALUE / 2) {b.undoMove(j); break;}
-  //       }
-
-  //       maxScore = Math.max(currentScore, maxScore);
-
-  //       alpha = Math.max(currentScore, alpha);
-  //     } else if (turn == 2) {
-  //       b.placeMove(j, 2);
-  //       currentScore = minimax(depth + 1, 1, alpha, beta);
-  //       minScore = Math.min(currentScore, minScore);
-
-  //       beta = Math.min(currentScore, beta);
-  //     }
-  //     b.undoMove(j);
-  //     if (currentScore == Integer.MAX_VALUE || currentScore == Integer.MIN_VALUE) break;
-  //   }
-  //   return turn == 1 ? maxScore : minScore;
-  // }
-
-
 
   /**
    * This method is used when to exit the program prematurly.
