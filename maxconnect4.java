@@ -60,22 +60,23 @@ public class maxconnect4 {
     int playColumn = 99;        //  the players choice of column to play
     boolean playMade = false;     //  set to true once a play has been made
 
+    System.out.print("\nMaxConnect-4 game\n");
+
     if ( game_mode.equalsIgnoreCase( "interactive" ) ) {
-      //System.out.println("interactive mode is currently not implemented\n");
       String whoNext = args[2].toString();
       playInteractiveGame(currentGame, depthLevel, whoNext);
-
       return;
-    } else if ( !game_mode.equalsIgnoreCase( "one-move" ) ) {
+    } else if (game_mode.equalsIgnoreCase( "one-move" ) ) {
+      String output = args[2].toString();       // the output game file
+      playOneMoveGame(currentGame, depthLevel, output);
+    } else {
       System.out.println( "\n" + game_mode + " is an unrecognized game mode \n try again. \n" );
       return;
     }
 
-    /////////////   one-move mode ///////////
-    // get the output file name
-    String output = args[2].toString();       // the output game file
+  } // end of main()
 
-    System.out.print("\nMaxConnect-4 game\n");
+  private static void playOneMoveGame(GameBoard currentGame, int depthLevel, String output) {
     System.out.print("game state before move:\n");
 
     //print the current game board
@@ -87,16 +88,12 @@ public class maxconnect4 {
     // ****************** this chunk of code makes the computer play
     if ( currentGame.getPieceCount() < 42 ) {
       int current_player = currentGame.getCurrentTurn();
-      // AI play - random play
-      playColumn = calculon.findBestPlay( currentGame );
-
-      // play the piece
-      currentGame.playPiece( playColumn );
+      // AI play - thoughtful play
+      currentGame = minimax(currentGame, 1, Integer.MIN_VALUE, Integer.MAX_VALUE, depthLevel);
 
       // display the current game board
       System.out.println("move " + currentGame.getPieceCount()
-                         + ": Player " + current_player
-                         + ", column " + playColumn);
+                         + ": Player " + current_player);
       System.out.print("game state after move:\n");
       currentGame.printGameBoard();
 
@@ -108,13 +105,7 @@ public class maxconnect4 {
     } else {
       System.out.println("\nI can't play.\nThe Board is Full\n\nGame Over");
     }
-
-    //************************** end computer play
-
-
-    return;
-
-  } // end of main()
+  }
 
   private static void playInteractiveGame(GameBoard currentGame, int depthLevel, String game_mode) {
     // currentGame = minimax(currentGame, currentGame.getCurrentTurn(), Integer.MIN_VALUE, Integer.MAX_VALUE, depthLevel);
@@ -125,7 +116,6 @@ public class maxconnect4 {
       // display the current game board
       System.out.println("move " + currentGame.getPieceCount()
                          + ": Player " + current_player);
-      //+ ", column " + playColumn);
       System.out.print("game state after move:\n");
       currentGame.printGameBoard();
 
@@ -138,8 +128,7 @@ public class maxconnect4 {
         game_mode = "human-next";
         currentGame = new GameBoard("computer.txt");
       } else {
-        //human shit
-        //currentGame = minimax(currentGame, current_player, Integer.MIN_VALUE, Integer.MAX_VALUE, depthLevel);
+        //human interaction
         Scanner scan = new Scanner(System.in);
         System.out.println("Your move (1-7): ");
         int move = scan.nextInt();
@@ -155,7 +144,6 @@ public class maxconnect4 {
         currentGame = new GameBoard("human.txt");
       }
     }
-
     int current_player = currentGame.getCurrentTurn();
     // display the current game board
     System.out.println("move " + currentGame.getPieceCount()
@@ -167,6 +155,11 @@ public class maxconnect4 {
     // print the current scores
     System.out.println( "Score: Player 1 = " + currentGame.getScore( 1 ) +
                         ", Player2 = " + currentGame.getScore( 2 ) + "\n " );
+
+    System.out.println("\nI can't play.\nThe Board is Full\n\nGame Over");
+
+
+
 
     /*
     function alphabeta(node, depth, α, β, maximizingPlayer)
@@ -203,25 +196,19 @@ public class maxconnect4 {
       GameBoard currentGameBoard = new GameBoard(gb.getGameBoard());
       gb.playPiece(i);
       if (turn == 1) {
-        //comp
+        //computer or max
         currentGameBoard = minimax(new GameBoard(gb.getGameBoard()), 2, alpha, beta, depth - 1);
-        //currentGameBoard.printGameBoard();
         if (currentGameBoard.getScore(1) > alpha) {
           alpha = currentGameBoard.getScore(1);
           finalGameBoard = new GameBoard(gb.getGameBoard()); // be careful
-          //currentGameBoard.printGameBoard();
-          //finalGameBoard.printGameBoard();
-          //System.out.println("hi");
         }
         if (alpha >= beta) break;
       } else {
-        //human
+        //human or min
         currentGameBoard = minimax(new GameBoard(gb.getGameBoard()), 1, alpha, beta, depth - 1);
-        //currentGameBoard.printGameBoard();
         if (currentGameBoard.getScore(2) < beta) {
           beta = currentGameBoard.getScore(2);
           finalGameBoard = new GameBoard(gb.getGameBoard());
-          //finalGameBoard.printGameBoard();
         }
         if (alpha >= beta) break;
       }
