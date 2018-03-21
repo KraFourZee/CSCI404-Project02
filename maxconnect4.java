@@ -53,13 +53,6 @@ public class maxconnect4 {
     // create and initialize the game board
     GameBoard currentGame = new GameBoard( input );
 
-    // create the Ai Player
-    AiPlayer calculon = new AiPlayer();
-
-    //  variables to keep up with the game
-    int playColumn = 99;        //  the players choice of column to play
-    boolean playMade = false;     //  set to true once a play has been made
-
     System.out.print("\nMaxConnect-4 game\n");
 
     if ( game_mode.equalsIgnoreCase( "interactive" ) ) {
