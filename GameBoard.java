@@ -16,6 +16,8 @@ public class GameBoard {
 	private int[][] playBoard;
 	private int pieceCount;
 	private int currentTurn;
+	private int rowPlaced;
+	private int columnPlaced;
 
 	/**
 	 * This constructor creates a GameBoard object based on the input file
@@ -230,6 +232,28 @@ public class GameBoard {
 	}
 
 	/**
+	 * this method returns a weighted row value for consideration when playing.
+	 * @return an integer that is the row score for the current move.
+	 */
+	public int getAdditionalWinningRowScore( int player, int opponent) {
+		int rowScore = 0;
+		//check horizontally
+		//I need my row from the column given
+		int j = rowPlaced;
+		for ( int i = 0; i < 6; i++ ) {
+			//for ( int j = 0; j < 5; j++ ) {
+				if ( this.playBoard[ i ][j] == player ) {
+					rowScore += 2; //assign 2 value points to the fact that the row is strong
+				} else if (this.playBoard[ i ][j] == opponent) {
+					rowScore -= 2; //subtract 2 value points if the opponent is in the row as well
+				} else {
+					rowScore += 1; //add one point if there an open spot in the row
+				}
+			//}
+		} // end horizontal
+		return rowScore;
+	}
+	/**
 	 * a method that determines if a play is valid or not. It checks to see if
 	 * the column is within bounds.  If the column is within bounds, and the
 	 * column is not full, then the play is valid.
@@ -271,10 +295,14 @@ public class GameBoard {
 					if ( this.pieceCount % 2 == 0 ) {
 						this.playBoard[i][column] = 1;
 						this.pieceCount++;
+						this.rowPlaced = i;
+						this.columnPlaced = column;
 
 					} else {
 						this.playBoard[i][column] = 2;
 						this.pieceCount++;
+						this.rowPlaced = i;
+						this.columnPlaced = column;
 					}
 
 					//testing

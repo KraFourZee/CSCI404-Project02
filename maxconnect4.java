@@ -196,16 +196,16 @@ public class maxconnect4 {
       if (turn == 1) {
         //computer or max
         currentGameBoard = minimax(new GameBoard(gb.getGameBoard()), 2, alpha, beta, depth - 1);
-        if (currentGameBoard.getScore(1) > alpha) {
-          alpha = currentGameBoard.getScore(1);
+        if ((currentGameBoard.getScore(1) + gb.getAdditionalWinningRowScore(1,2)) > alpha) {
+          alpha = currentGameBoard.getScore(1) + gb.getAdditionalWinningRowScore(1,2);
           finalGameBoard = new GameBoard(gb.getGameBoard()); // be careful
         }
         if (alpha >= beta) break;
       } else {
         //human or min
         currentGameBoard = minimax(new GameBoard(gb.getGameBoard()), 1, alpha, beta, depth - 1);
-        if (currentGameBoard.getScore(2) < beta) {
-          beta = currentGameBoard.getScore(2);
+        if ((currentGameBoard.getScore(2) + gb.getAdditionalWinningRowScore(2,1)) < beta) {
+          beta = currentGameBoard.getScore(2) + gb.getAdditionalWinningRowScore(2,1);
           finalGameBoard = new GameBoard(gb.getGameBoard());
         }
         if (alpha >= beta) break;
@@ -227,16 +227,16 @@ public class maxconnect4 {
       if (turn == 2) {
         //computer or max
         currentGameBoard = minimax(new GameBoard(gb.getGameBoard()), 1, alpha, beta, depth - 1);
-        if (currentGameBoard.getScore(2) > alpha) {
-          alpha = currentGameBoard.getScore(2);
+        if ((currentGameBoard.getScore(2) + gb.getAdditionalWinningRowScore(2,1)) > alpha) {
+          alpha = currentGameBoard.getScore(2) + gb.getAdditionalWinningRowScore(2,1);
           finalGameBoard = new GameBoard(gb.getGameBoard()); // be careful
         }
         if (alpha >= beta) break;
       } else {
         //human or min
         currentGameBoard = minimax(new GameBoard(gb.getGameBoard()), 2, alpha, beta, depth - 1);
-        if (currentGameBoard.getScore(1) < beta) {
-          beta = currentGameBoard.getScore(1);
+        if ((currentGameBoard.getScore(1) + gb.getAdditionalWinningRowScore(1,2)) < beta) {
+          beta = currentGameBoard.getScore(1) + gb.getAdditionalWinningRowScore(1,2);
           finalGameBoard = new GameBoard(gb.getGameBoard());
         }
         if (alpha >= beta) break;
